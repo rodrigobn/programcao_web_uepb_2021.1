@@ -51,4 +51,8 @@ public class StudentController {
     public void deleteStudent(@PathVariable Long id) {
         studentRepository.delete(studentRepository.findById(id).get());
     }
+
+    @DeleteMapping
+    @ApiOperation(value = "Deletes all student")
+    public void deleteAllStudent() {studentRepository.deleteAll();}
 }

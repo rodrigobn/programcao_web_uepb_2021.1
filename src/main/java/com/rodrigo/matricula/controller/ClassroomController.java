@@ -70,6 +70,10 @@ public class ClassroomController {
         classroomRepository.delete(classroomRepository.findById(id).get());
     }
 
+    @DeleteMapping()
+    @ApiOperation(value = "Deletes all classroom")
+    public void deleteAllClassroom() {classroomRepository.deleteAll();}
+
     @PatchMapping("/{classroomId}/registerStudent/{studentId}")
     @ApiOperation(value = "Links a student to a teacher")
     public Optional<Classroom> patchClassroom(@PathVariable long classroomId, @PathVariable String studentId) {
