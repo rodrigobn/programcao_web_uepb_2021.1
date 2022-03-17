@@ -1,10 +1,17 @@
 package com.rodrigo.matricula.controller;
 
+import com.rodrigo.matricula.dto.GenericResponseErrorDTO;
+import com.rodrigo.matricula.dto.TeacherDTO;
+import com.rodrigo.matricula.exceptions.ExistingTeacherInProjectException;
+import com.rodrigo.matricula.mapper.MatriculaMapper;
 import com.rodrigo.matricula.models.Teacher;
 import com.rodrigo.matricula.repository.TeacherRepository;
+import com.rodrigo.matricula.services.TeachersServices;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +25,23 @@ public class TeacherController {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private TeachersServices teachersServices;
+
+    @Autowired
+    private MatriculaMapper matriculaMapper;
+
+    @PostMapping
+    @ApiOperation(value = "Cria um novo professor")
+    public ResponseEntity<?> createTeacher(@RequestBody TeacherDTO teacherDTO) {
+        try {
+            Teacher teacher = matriculaMapper.convertFromTeacherDTO(teacherDTO);
+            return new ResponseEntity<>(teachersServices.createTeacher(teacher), HttpStatus.CREATED);
+        } catch (ExistingTeacherInProjectException e) {
+            return ResponseEntity.badRequest().body(new GenericResponseErrorDTO(e.getMessage()));
+        }
+    }
+
     @GetMapping
     @ApiOperation(value = "Search a list of all teachers")
     public List<Teacher> getTeacher() {
@@ -28,12 +52,6 @@ public class TeacherController {
     @ApiOperation(value = "Search for a teacher by their identifier")
     public Optional<Teacher> getTeacherById(@PathVariable Long id) {
         return teacherRepository.findById(id);
-    }
-
-    @PostMapping
-    @ApiOperation(value = "Create a new teacher")
-    public Teacher createTeacher(@RequestBody Teacher teacher) {
-        return teacherRepository.save(teacher);
     }
 
     @PutMapping("/{id}")

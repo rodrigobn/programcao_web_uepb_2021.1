@@ -25,4 +25,7 @@ public class Project {
     @Column(name = "idTeacher", unique = true)
     private Long idTeacher;
 
+    @Column(name = "ids_students", unique = true)
+    private String idsStudents;
+
 }

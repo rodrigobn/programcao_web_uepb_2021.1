@@ -25,10 +25,14 @@ public class Student {
     @Column(name = "email", unique = true)
     private String email;
 
-    public Student(String name, String registration, String email) {
+    @Column(name = "function", unique = true)
+    private String function;
+
+    public Student(String name, String registration, String email, String function) {
         this.name = name;
         this.registration = registration;
         this.email = email;
+        this.function = function;
     }
 
     public String getName() {
